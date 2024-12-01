@@ -15,7 +15,7 @@ struct Day01Tests {
         (")))", -3),
         (")())())", -3),
     ])
-    func testPart1(input: String, expectedAnswer: Int) async throws {
+    func testPart1(input: String, expectedAnswer: Int) {
         let challenge = Day01(data: input)
         #expect(challenge.part1() == expectedAnswer)
     }
