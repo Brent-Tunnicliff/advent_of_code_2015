@@ -34,6 +34,28 @@ struct Day06: AdventDay {
         return grid.values.filter(\.value).count
     }
 
+    func part2() -> Int {
+        var grid = generateBrightnessGrid()
+
+        for (command, coordinates) in commands {
+            let newValues = coordinates.reduce(into: [Coordinates: Int]()) { partialResult, coordinates in
+                let existingValue = (partialResult[coordinates] ?? grid[coordinates] ?? 0)
+                partialResult[coordinates] =
+                    switch command {
+                    case .toggle: existingValue + 2
+                    case .turnOn: existingValue + 1
+                    case .turnOff: max(existingValue - 1, 0)
+                    }
+            }
+
+            grid = grid.adding(newValues, overrideExisting: true)
+        }
+
+        return grid.values.map(\.value).reduce(into: 0) { partialResult, value in
+            partialResult += value
+        }
+    }
+
     // MARK: - Helpers
 
     private func generateGrid() -> Grid<Coordinates, Bool> {
@@ -44,6 +66,19 @@ struct Day06: AdventDay {
 
         let values = keys.reduce(into: [Coordinates: Bool]()) { partialResult, coordinates in
             partialResult[coordinates] = false
+        }
+
+        return Grid(values: values)
+    }
+
+    private func generateBrightnessGrid() -> Grid<Coordinates, Int> {
+        let keys = generateCoordinates(
+            from: Coordinates(x: 0, y: 0),
+            to: Coordinates(x: 999, y: 999)
+        )
+
+        let values = keys.reduce(into: [Coordinates: Int]()) { partialResult, coordinates in
+            partialResult[coordinates] = 0
         }
 
         return Grid(values: values)
