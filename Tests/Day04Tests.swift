@@ -7,7 +7,7 @@ import Testing
 struct Day04Tests {
     @Test(arguments: [
         ("abcdef", 609_043),
-        ("pqrstuv", 1_048_970)
+        ("pqrstuv", 1_048_970),
     ])
     func testPart1(input: String, expected: Int) async {
         let challenge = Day04(data: input)

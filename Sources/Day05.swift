@@ -12,18 +12,29 @@ struct Day05: AdventDay {
     }
 
     func part1() -> Int {
-        strings.filter { $0.isNice() }.count
+        strings
+            .filter {
+                $0.containsThreeVowels()
+                    && $0.containsTwoAdjacentRepeats()
+                    && !$0.containsNaughtyStrings()
+            }
+            .count
+    }
+
+    func part2() -> Int {
+        strings
+            .filter {
+                $0.containsPairOfTwoLettersRepeating()
+                    && $0.containsRepeatingLetterWithOneBetween()
+            }
+            .count
     }
 }
 
-private extension String {
-    func isNice() -> Bool {
-        containsThreeVowels()
-            && containsTwoAdjacentRepeats()
-            && !containsNaughtyStrings()
-    }
+extension String {
+    // MARK: - Part 1
 
-    private func containsThreeVowels() -> Bool {
+    fileprivate func containsThreeVowels() -> Bool {
         let vowels = "aeiou"
         var count = 0
         for character in self {
@@ -39,7 +50,7 @@ private extension String {
         return false
     }
 
-    private func containsNaughtyStrings() -> Bool {
+    fileprivate func containsNaughtyStrings() -> Bool {
         for naughtyString in ["ab", "cd", "pq", "xy"] where contains(naughtyString) {
             return true
         }
@@ -47,7 +58,7 @@ private extension String {
         return false
     }
 
-    private func containsTwoAdjacentRepeats() -> Bool {
+    fileprivate func containsTwoAdjacentRepeats() -> Bool {
         let array = Array(self)
         for (index, character) in array.enumerated() {
             guard index + 1 < count else {
@@ -55,6 +66,41 @@ private extension String {
             }
 
             if array[index + 1] == character {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    // MARK: - Part 2
+
+    fileprivate func containsPairOfTwoLettersRepeating() -> Bool {
+        let array = Array(self)
+        for (index, character) in array.enumerated() {
+            guard index + 2 < count else {
+                return false
+            }
+
+            let pair = character.toString() + array[index + 1].toString()
+            let remaining = array.dropFirst(index + 2)
+
+            if remaining.contains(pair) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    fileprivate func containsRepeatingLetterWithOneBetween() -> Bool {
+        let array = Array(self)
+        for (index, character) in array.enumerated() {
+            guard index + 2 < count else {
+                return false
+            }
+
+            if array[index + 2] == character {
                 return true
             }
         }
